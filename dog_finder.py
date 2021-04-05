@@ -4,11 +4,22 @@ import smtplib
 import secrets.mail as mail
 from urllib.request import urlopen, Request
 from email.mime.text import MIMEText
+from html.parser import HTMLParser
+from pyquery import PyQuery as pq
+from lxml import etree
+import urllib
 
-dog_website = "https://www.reddit.com/new/"
+
+dog_website = "https://hundarutanhem.se/dog/category/sma-hundar/"
 time_out = 10
 url = Request(dog_website, headers={'User-Agent': 'Mozilla/5.0'})
-response = urlopen(url).read()
+
+response = urlopen(url).read().decode("utf-8")
+# d = pq(response)
+d = pq('https://hundarutanhem.se/dog/category/sma-hundar/')
+first_dog_href = d("article").eq(0).find('a').attr("href")
+first_dog_img = d("article").eq(0).find('a').find("img").attr("src")
+
 currentHash = hashlib.sha224(response).hexdigest()
 print("Dog finder launched")
 
