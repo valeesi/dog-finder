@@ -1,5 +1,7 @@
-from pyquery import PyQuery as pq
 import hashlib
+import logging_config
+from pyquery import PyQuery as pq
+
 
 sites_to_monitor = {
     'hundarutanhem': 'https://hundarutanhem.se/hundar/',
@@ -36,6 +38,7 @@ def load_current_dogs():
                 d.find(".small-12").find('a').filter(
                     lambda i, this: pq(this).text().__contains__('Mer') is False).items()
             )
+
 
 
 def hash_this(str):
