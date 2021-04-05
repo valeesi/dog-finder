@@ -23,7 +23,7 @@ class SendMail:
             contents = f.read()
             template = pq(contents)
 
-        for value in zoo.dogs_found.values():
+        for value in zoo.current_dogs.values():
             template.find(".dog-list").append(value)
 
         msg_text = MIMEText(template.__str__(), 'html')

@@ -1,7 +1,6 @@
 import hashlib
-import logging_config
+from logging_config import logger
 from pyquery import PyQuery as pq
-
 
 sites_to_monitor = {
     'hundarutanhem': 'https://hundarutanhem.se/hundar/',
@@ -13,16 +12,21 @@ sites_to_monitor = {
 # 'hundhjalpen': 'https://hundhjalpen.se/hundar-for-adoption/',
 # 'hundrondellen': 'https://hundhjalpen.se/hundar-for-adoption/',
 # 'sosanimals': 'https://www.sos-animals.se/dogs/'
-dogs_found = {}
+current_dogs = {}
+new_dogs = {}
 
 
 def add_dog(dog_list):
     for dog in dog_list:
         element = dog.__str__().replace("\t", "").replace("\n", "")
-        dogs_found[hash_this(element.encode("utf-8"))] = element
+        hashed = hash_this(element.encode("utf-8"))
+        if hashed not in current_dogs:
+            new_dogs[hashed] = element
+        current_dogs[hashed] = element
 
 
-def load_current_dogs():
+def scan_for_dogs():
+    logger.info("Search for dogs on " + len(sites_to_monitor.items()).__str__() + " sites")
     for name, url in sites_to_monitor.items():
         d = pq(url)
         if name == 'hundarutanhem':
@@ -38,8 +42,8 @@ def load_current_dogs():
                 d.find(".small-12").find('a').filter(
                     lambda i, this: pq(this).text().__contains__('Mer') is False).items()
             )
+    logger.info(len(current_dogs).__str__() + " dogs have been added to cache")
 
 
-
-def hash_this(str):
-    return hashlib.sha224(str).hexdigest()
+def hash_this(element):
+    return hashlib.sha224(element).hexdigest()

@@ -1,30 +1,27 @@
 import data.zoo as zoo
 import time
-from datetime import datetime
 from logging_config import logger
 from mail.factory import SendMail
 
 
 def main():
-    time_out = 10
-    logger.info("Dog finder launched")
-    zoo.load_current_dogs()
-    # SendMail("New dogs found", strr)
-    logger.info("Mail sent")
-
-    # while True:
-    #     try:
-    #         time.sleep(time_out)
-    #         d = pq('https://hundarutanhem.se/dog/category/sma-hundar/')
-    #         newHash = hashlib.sha224(d("article").__str__().encode("utf-8")).hexdigest()
-    #         if newHash == currentHash:
-    #             continue
-    #         else:
-    #             print("Something changed")
-    #             mail_server.send_message(msg)
-    #             continue
-    #     except Exception as e:
-    #         print("error: " + e)
+    logger.info("Let's find some dogs!")
+    zoo.scan_for_dogs()
+    zoo.new_dogs.clear()
+    while True:
+        try:
+            time.sleep(300)
+            zoo.scan_for_dogs()
+            if len(zoo.new_dogs) == 0:
+                continue
+            else:
+                notis = len(zoo.new_dogs.values()).__str__() + " New dogs found"
+                SendMail(notis, "".join(zoo.new_dogs.values()))
+                logger.info(notis)
+                zoo.new_dogs.clear()
+                continue
+        except Exception as e:
+            logger.error("Error: " + e)
 
 
 if __name__ == "__main__":
