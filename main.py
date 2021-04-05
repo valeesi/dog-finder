@@ -1,10 +1,11 @@
 import time
 import data.zoo as zoo
+from mail.factory import SendMail
 
 time_out = 10
 print("Dog finder launched")
 strr = zoo.load_current_dogs()
-# mail.SendMail("New dogs found", strr)
+SendMail("New dogs found", strr)
 print("Mail sent")
 
 # while True:

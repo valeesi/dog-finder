@@ -2,42 +2,41 @@ from pyquery import PyQuery as pq
 import hashlib
 
 sites_to_monitor = {
-    'hundarutanhem': {
-        'url': 'https://hundarutanhem.se/hundar/',
-        'tag': 'a'
-    },
-    'hundarsokerhem': {
-        'url': 'https://hundarsokerhem.se/hundar-som-soker-hem/',
-        'tag': '.arkivhund'
-    }
+    'hundarutanhem': 'https://hundarutanhem.se/hundar/',
+    'hundarsokerhem': 'https://hundarsokerhem.se/hundar-som-soker-hem/',
+    'hundstallet': 'https://hundstallet.se/soker-hem/'
 }
 # 'hundstallet': 'https://hundstallet.se/soker-hem/',
 # 'dogrescue': 'https://www.dogrescue.se/hundar-soker-hem/',
 # 'hundhjalpen': 'https://hundhjalpen.se/hundar-for-adoption/',
 # 'hundrondellen': 'https://hundhjalpen.se/hundar-for-adoption/',
 # 'sosanimals': 'https://www.sos-animals.se/dogs/'
-dogs_found = {''}
+dogs_found = {}
 
 
-def add_dog(url, tag_for_list, additional_tag=None):
-    d = pq(url)
-    for dog in d.items(tag_for_list):
-        if additional_tag is None:
-            dog_entry = dog
-        else:
-            dog_entry = dog.find(additional_tag)
-        dogs_found.add(
-            hash_dog(dog_entry.__str__().encode("utf-8"))
-        )
+def add_dog(dog_list):
+    for dog in dog_list:
+        element = dog.__str__().replace("\t", "").replace("\n", "")
+        dogs_found[hash_this(element.encode("utf-8"))] = element
 
 
 def load_current_dogs():
-    for site, value in sites_to_monitor.items():
-        if site == 'hundarutanhem':
-            add_dog(value['url'], 'article', additional_tag='a')
-        elif site == 'hundarsokerhem':
-            add_dog(value['url'], value['tag'])
+    for name, url in sites_to_monitor.items():
+        d = pq(url)
+        if name == 'hundarutanhem':
+            add_dog(
+                d.find('article').find('a').filter(lambda i, this: pq(this).attr('rel') != 'bookmark').items()
+            )
+        elif name == 'hundarsokerhem':
+            add_dog(
+                d.find('.arkivhund').find('a').filter(lambda i, this: pq(this).text() == '').items()
+            )
+        elif name == 'hundstallet':
+            add_dog(
+                d.find(".small-12").find('a').filter(
+                    lambda i, this: pq(this).text().__contains__('Mer') is False).items()
+            )
 
 
-def hash_dog(str):
+def hash_this(str):
     return hashlib.sha224(str).hexdigest()

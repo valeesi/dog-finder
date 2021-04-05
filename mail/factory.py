@@ -2,6 +2,8 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import secrets.mail as mail
+from pyquery import PyQuery as pq
+import data.zoo as zoo
 
 
 class SendMail:
@@ -16,7 +18,15 @@ class SendMail:
         msg['Subject'] = subject
         msg['From'] = mail.username
         msg['To'] = ", ".join(mail.recipients)
-        msg_text = MIMEText(html_content, 'html')
+
+        with open("mail\\template.html", "r") as f:
+            contents = f.read()
+            template = pq(contents)
+
+        for value in zoo.dogs_found.values():
+            template.find(".dog-list").append(value)
+
+        msg_text = MIMEText(template.__str__(), 'html')
         msg.attach(msg_text)
 
         mail_server.send_message(msg)
