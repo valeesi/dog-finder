@@ -1,9 +1,9 @@
+import data.zoo as zoo
+import secrets.mail as mail
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-import secrets.mail as mail
 from pyquery import PyQuery as pq
-import data.zoo as zoo
 
 
 class SendMail:
