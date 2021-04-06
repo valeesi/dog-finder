@@ -1,4 +1,5 @@
-import data.zoo as zoo
+import os
+
 import secrets.mail as mail
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -19,7 +20,7 @@ class SendMail:
         msg['From'] = mail.username
         msg['To'] = ", ".join(mail.recipients)
 
-        with open("mail/template.html", "r") as f:
+        with open(os.path.join("mail", "template.html"), "r") as f:
             contents = f.read()
             template = pq(contents)
 

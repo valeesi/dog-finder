@@ -1,5 +1,4 @@
 import hashlib
-from logging_config import logger
 from pyquery import PyQuery as pq
 
 sites_to_monitor = {
