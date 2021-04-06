@@ -26,7 +26,6 @@ def add_dog(dog_list):
 
 
 def scan_for_dogs():
-    logger.info("Search for dogs on " + len(sites_to_monitor.items()).__str__() + " sites")
     for name, url in sites_to_monitor.items():
         d = pq(url)
         if name == 'hundarutanhem':
@@ -42,7 +41,6 @@ def scan_for_dogs():
                 d.find(".small-12").find('a').filter(
                     lambda i, this: pq(this).text().__contains__('Mer') is False).items()
             )
-    logger.info(len(current_dogs).__str__() + " dogs have been added to cache")
 
 
 def hash_this(element):

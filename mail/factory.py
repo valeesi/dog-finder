@@ -19,12 +19,11 @@ class SendMail:
         msg['From'] = mail.username
         msg['To'] = ", ".join(mail.recipients)
 
-        with open("mail\\template.html", "r") as f:
+        with open("mail/template.html", "r") as f:
             contents = f.read()
             template = pq(contents)
 
-        for value in zoo.current_dogs.values():
-            template.find(".dog-list").append(value)
+        template.find(".dog-list").append(html_content)
 
         msg_text = MIMEText(template.__str__(), 'html')
         msg.attach(msg_text)
