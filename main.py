@@ -26,6 +26,7 @@ def main():
                 continue
         except Exception as e:
             logger.error("Error: " + e)
+            SendMail("Something went wrong!", e)
 
 
 if __name__ == "__main__":
