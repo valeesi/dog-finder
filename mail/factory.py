@@ -4,6 +4,7 @@ import secrets.mail as mail
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from email.utils import formataddr
 from pyquery import PyQuery as pq
 
 
@@ -17,7 +18,7 @@ class SendMail:
 
         msg = MIMEMultipart()
         msg['Subject'] = subject
-        msg['From'] = mail.username
+        msg['From'] = formataddr(('Dog finder', mail.username))
         msg['To'] = ", ".join(mail.recipients)
 
         with open(os.path.join("mail", "template.html"), "r") as f:
