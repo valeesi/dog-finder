@@ -4,9 +4,9 @@ from pyquery import PyQuery as pq
 sites_to_monitor = {
     'hundarutanhem': 'https://hundarutanhem.se/hundar/',
     'hundarsokerhem': 'https://hundarsokerhem.se/hundar-som-soker-hem/',
-    'hundstallet': 'https://hundstallet.se/soker-hem/'
+    'hundstallet': 'https://hundstallet.se/soker-hem/',
+    'amigosmios': 'https://www.amigosmios.se/hundar-soker-hem/'
 }
-# 'hundstallet': 'https://hundstallet.se/soker-hem/',
 # 'dogrescue': 'https://www.dogrescue.se/hundar-soker-hem/',
 # 'hundhjalpen': 'https://hundhjalpen.se/hundar-for-adoption/',
 # 'hundrondellen': 'https://hundhjalpen.se/hundar-for-adoption/',
@@ -39,6 +39,10 @@ def scan_for_dogs():
             add_dog(
                 d.find(".small-12").find('a').filter(
                     lambda i, this: pq(this).text().__contains__('Mer') is False).items()
+            )
+        elif name == 'amigosmios':
+            add_dog(
+                d.find(".overlay").find('a').items()
             )
 
 
