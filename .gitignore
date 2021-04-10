@@ -1,2 +1,4 @@
 secrets/*
 debug.log
+.idea
+venv
