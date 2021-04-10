@@ -26,23 +26,23 @@ def add_dog(dog_list):
 
 def scan_for_dogs():
     for name, url in sites_to_monitor.items():
-        d = pq(url)
+        html_code = pq(url)
         if name == 'hundarutanhem':
             add_dog(
-                d.find('article').find('a').filter(lambda i, this: pq(this).attr('rel') != 'bookmark').items()
+                html_code.find('article').find('a').filter(lambda i, this: pq(this).attr('rel') != 'bookmark').items()
             )
         elif name == 'hundarsokerhem':
             add_dog(
-                d.find('.arkivhund').find('a').filter(lambda i, this: pq(this).text() == '').items()
+                html_code.find('.arkivhund').find('a').filter(lambda i, this: pq(this).text() == '').items()
             )
         elif name == 'hundstallet':
             add_dog(
-                d.find(".small-12").find('a').filter(
+                html_code.find(".small-12").find('a').filter(
                     lambda i, this: pq(this).text().__contains__('Mer') is False).items()
             )
-        elif name == 'amigosmios':
+        elif name == "amigosmios":
             add_dog(
-                d.find(".overlay").find('a').items()
+                html_code.find(".overlay").find("a").items()
             )
 
 
