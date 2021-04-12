@@ -21,7 +21,9 @@ class SendMail:
         msg['From'] = formataddr(('Dog finder', mail.username))
         msg['To'] = ", ".join(mail.recipients)
 
-        with open(os.path.join("mail", "template.html"), "r") as f:
+        __location__ = os.path.realpath(
+            os.path.join(os.getcwd(), os.path.dirname(__file__)))
+        with open(os.path.join(__location__, "template.html"), "r") as f:
             contents = f.read()
             template = pq(contents)
 
