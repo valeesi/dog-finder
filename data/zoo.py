@@ -1,16 +1,22 @@
 import hashlib
+from urllib.request import urlopen, Request
+
 from pyquery import PyQuery as pq
 
 sites_to_monitor = {
     'hundarutanhem': 'https://hundarutanhem.se/hundar/',
     'hundarsokerhem': 'https://hundarsokerhem.se/hundar-som-soker-hem/',
     'hundstallet': 'https://hundstallet.se/soker-hem/',
-    'amigosmios': 'https://www.amigosmios.se/hundar-soker-hem/'
+    'amigosmios': 'https://www.amigosmios.se/hundar-soker-hem/',
+    'sosanimals': 'https://www.sos-animals.se/dogs/'
+
 }
 # 'dogrescue': 'https://www.dogrescue.se/hundar-soker-hem/',
 # 'hundhjalpen': 'https://hundhjalpen.se/hundar-for-adoption/',
 # 'hundrondellen': 'https://hundhjalpen.se/hundar-for-adoption/',
-# 'sosanimals': 'https://www.sos-animals.se/dogs/'
+# 'amigosmios': 'https://www.amigosmios.se/hundar-soker-hem/',
+# 'sosanimals': 'https://www.sos-animals.se/dogs/',
+
 current_dogs = {}
 new_dogs = {}
 
@@ -26,7 +32,11 @@ def add_dog(dog_list):
 
 def scan_for_dogs():
     for name, url in sites_to_monitor.items():
-        html_code = pq(url)
+
+        req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        webpage = urlopen(req).read()
+        html_code = pq(webpage)
+        # html_code = pq(url, headers={'user-agent': 'Mozilla/5.0'})
         if name == 'hundarutanhem':
             add_dog(
                 html_code.find('article').find('a').filter(lambda i, this: pq(this).attr('rel') != 'bookmark').items()
@@ -44,6 +54,14 @@ def scan_for_dogs():
             add_dog(
                 html_code.find(".overlay").find("a").items()
             )
+        elif name == "sosanimals":
+            add_dog(
+                html_code.find(".dog-card").find("a").filter(
+                    lambda i, this: pq(this).text().__contains__('Mer') is False).filter(lambda i, this: pq(this).text() == '').items()
+            )
+
+
+
 
 
 def hash_this(element):
